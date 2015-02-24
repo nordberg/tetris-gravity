@@ -5,12 +5,19 @@ public class Spawner : MonoBehaviour {
 
 	public GameObject[] groups;
 
-	public void spawnNext() {
-		int i = Random.Range (0, groups.Length);
+	private int ballsSpawned = 0;
 
-		Instantiate (groups [i],
-		             transform.position,
-		             Quaternion.identity);
+	public void spawnNext() {
+
+		if (ballsSpawned < 100) {
+			int i = Random.Range (0, groups.Length);
+			
+			Instantiate (groups [i],
+			             transform.position,
+			             Quaternion.identity);
+
+			ballsSpawned++;
+		}
 	}
 
 	// Use this for initialization
