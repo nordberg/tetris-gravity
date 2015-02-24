@@ -9,12 +9,12 @@ public class Circle : MonoBehaviour {
 	public Vector3 velocity;
 
 	private bool spawnedBall = false;
+	private bool fixated = true;
 
 	// Use this for initialization
 	void Start () {
-		System.Random r = new System.Random ();
 
-		velocity = new Vector3(0.1f * ((float) r.NextDouble() - 0.5f), 0, 0);
+		velocity = new Vector3(0, 0, 0);
 	}
 
 	bool isColliding(Circle c) {
@@ -27,12 +27,11 @@ public class Circle : MonoBehaviour {
 
 			if (velocity[1] < 0.001 && velocity[0] < 0.001 &&
 			    c.velocity[1] < 0.001 && c.velocity[2] < 0.001) {
-				//c.velocity = new Vector3(0, 0, 0);
-				//velocity = new Vector3(0, 0, 0);
 
-				if (!spawnedBall) 
+				if (!spawnedBall) {
 					FindObjectOfType<Spawner>().spawnNext();
-				spawnedBall = true;
+					spawnedBall = true;
+				}
 			}
 			return true;
 		}
@@ -42,42 +41,61 @@ public class Circle : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		velocity += new Vector3 (0, -gravity, 0);
-
-		if (velocity [1] < 0.01) {
-			velocity[0] *= 0.8f;
-		}
-
-		transform.position += velocity;
-		if (!isValidPos ()) {
-			//transform.position = new Vector3 (transform.position [0], -0.5f, 0);
-			//velocity = -0.5f * velocity;
-			if (transform.position[1] <= 0) {
-				velocity[1] *= -0.5f;
-				transform.position = new Vector3 (transform.position [0], -0.5f, 0);;
+		if (fixated) {
+			if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+				transform.velocity += new Vector3(-1, 0, 0);
+			} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
+				transform.velocity += new Vector3(1, 0, 0);
+			} else if (Input.GetKeyDown (KeyCode.Space)) {
+				fixated = false;
 			}
 
-			if (transform.position[0] <= 0) {
-				velocity[0] *= -0.5f;
-				transform.position = new Vector3 (0.1f, transform.position [1], 0);
-			} else if (transform.position[0] >= Grid.w - 1) {
-				velocity[0] *= -0.5f;
-				transform.position = new Vector3 (Grid.w - 1.1f, transform.position [1], 0);
+			if (velocity[0] > 0) {
+				velocity += new Vector3(-0.1, 0, 0);
+			} else if (velocity[0] < 0) {
+				velocity += new Vector3(0.1, 0, 0);
 			}
 
-			if (Mathf.Abs (velocity [1]) < 0.01 && Mathf.Abs (velocity [0]) < 0.01) {
-				velocity = new Vector3 (0, 0, 0);
-				if (!spawnedBall) {
-					FindObjectOfType<Spawner> ().spawnNext ();
-					spawnedBall = true;
+			transform.position += velocity;
+
+		} else {
+			velocity += new Vector3 (0, -gravity, 0);
+
+			if (velocity [1] < 0.01) {
+				velocity[0] *= 0.8f;
+			}
+
+			transform.position += velocity;
+
+			if (!isValidPos ()) {
+
+				if (transform.position[1] <= 0) {
+					velocity[1] *= -0.5f;
+					transform.position = new Vector3 (transform.position [0], -0.5f, 0);;
+				}
+
+				if (transform.position[0] <= 0) {
+					velocity[0] *= -0.5f;
+					transform.position = new Vector3 (0.1f, transform.position [1], 0);
+				} else if (transform.position[0] >= Grid.w - 1) {
+					velocity[0] *= -0.5f;
+					transform.position = new Vector3 (Grid.w - 1.1f, transform.position [1], 0);
+				}
+
+				if (Mathf.Abs (velocity [1]) < 0.01 && Mathf.Abs (velocity [0]) < 0.01) {
+					velocity = new Vector3 (0, 0, 0);
+					if (!spawnedBall) {
+						FindObjectOfType<Spawner> ().spawnNext ();
+						spawnedBall = true;
+					}
 				}
 			}
-		}
 
-		foreach (Circle c in FindObjectsOfType<Circle>()) {
-			if (c.transform.position != transform.position) {
-				isColliding(c);
-			} 
+			foreach (Circle c in FindObjectsOfType<Circle>()) {
+				if (c.transform.position != transform.position) {
+					isColliding(c);
+				} 
+			}
 		}
 	}
 
@@ -87,11 +105,7 @@ public class Circle : MonoBehaviour {
 		// Not inside Border?
 		if (!Grid.insideBorder(v))
 			return false;
-		
-		// Block in grid cell (and not part of same group)?
-		/*if (Grid.grid[(int)v.x, (int)v.y] != null &&
-		    Grid.grid[(int)v.x, (int)v.y].parent != transform)
-			return false;*/
+
 		return true;
 	}
 }
