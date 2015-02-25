@@ -4,6 +4,7 @@ using System.Collections;
 public class Spawner : MonoBehaviour {
 
 	public GameObject[] groups;
+	public Circle m_ballPrefab = null;
 
 	private int ballsSpawned = 0;
 
@@ -12,9 +13,21 @@ public class Spawner : MonoBehaviour {
 		if (ballsSpawned < 100) {
 			int i = Random.Range (0, groups.Length);
 			
-			Instantiate (groups [i],
+			Circle c = (Circle) Instantiate (m_ballPrefab,
 			             transform.position,
 			             Quaternion.identity);
+			c.ClearForce();
+			c.ApplyGravity();
+			c.ApplyGroundForce();
+
+
+
+			Grid.m_circles.Add(c);
+
+
+			//Debug.Log ("New ball");
+			//Debug.Log(Grid.m_circles.Count);
+			//Det skapas massa bolar och de hamnar i m_circles
 
 			ballsSpawned++;
 		}
@@ -27,6 +40,9 @@ public class Spawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		//spawnNext ();
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			spawnNext ();
+		}
 	}
 }
