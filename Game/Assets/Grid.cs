@@ -104,12 +104,9 @@ public class Grid : MonoBehaviour {
 		{
 			m_accumulator -= 1.0f;
 			
-			AdvanceEuler(m_circles, ApplyForces, m_integratorTimeStep);
-			//AdvanceSimulation();
+			//	AdvanceEuler(m_circles, ApplyForces, m_integratorTimeStep);
+			AdvanceSimulation();
 		}
-
-		AdvanceEuler(m_circles, ApplyForces, m_integratorTimeStep);
-		//AdvanceSimulation ();
 	}
 
 	void AdvanceSimulation()

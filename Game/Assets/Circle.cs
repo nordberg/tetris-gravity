@@ -99,15 +99,15 @@ public class Circle : MonoBehaviour {
 			if (this != c) {
 				Vector3 distVec = c.State.Position - State.Position;
 				float dist = distVec.magnitude;
-				float mCircleStiffness = 200f;
+				float mCircleStiffness = 400f;
 				float mCircleDampning = 10f;
 
+				if(distVec.magnitude <= 0) 
+					Debug.Log ("Inte bra");
+
 				if (dist < 2 * radius) {
-					float depth = radius - dist;
+					float depth = dist - 2*radius;
 					Vector3 f1 = depth * mCircleStiffness * distVec.normalized;
-					if (f1.magnitude >= 80) {
-						f1 = f1.normalized * 80f;
-					}
 					Vector3 dampning = -mCircleDampning * State.Velocity;
 					ApplyForce (f1);
 					c.ApplyForce (-f1);
