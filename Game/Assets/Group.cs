@@ -58,11 +58,10 @@ public class Group : MonoBehaviour {
 				
 				float diff_dist = dist - distanceMatrix[i,j];
 
-				/*if (diff_dist > 0.5f) {
-					c1.connected = false;
-					c2.connected = false;
+				if (diff_dist > 0.1f) {
+					distanceMatrix[i, j] = -1;
 					continue;
-				}*/
+				}
 
 				float m_attraction = 250f;
 
