@@ -73,6 +73,7 @@ public class Circle : MonoBehaviour {
 
 	private bool spawnedBall = false;
 	private bool fixated = true;
+	public bool connected = true;
 
 	// Use this for initialization
 	void Start () {
@@ -91,7 +92,6 @@ public class Circle : MonoBehaviour {
 
 	public void ApplyForce(Vector3 f) {
 		Force += f;
-		Force += new Vector3(0.3f, 0, 0);
 	}
 
 	public void ResolveCollisions() {
@@ -145,32 +145,15 @@ public class Circle : MonoBehaviour {
 		ApplyForce (groundForce);
 	}
 
+	public void ApplyNeighborForce() {
+		Component parent = GetComponentInParent<Group> ();
 
-
-	/*bool isColliding(Circle c) {
-		Vector3 distVec = transform.position - c.transform.position;
-		if (distVec.magnitude <= 1) {
-			transform.position = c.transform.position + distVec.normalized;
-			Vector3 tmp = velocity;
-			velocity = 0.9f*c.velocity;
-			c.velocity = tmp;
-
-			if (velocity[1] < 0.001 && velocity[0] < 0.001 &&
-			    c.velocity[1] < 0.001 && c.velocity[2] < 0.001) {
-
-				if (!spawnedBall) {
-					FindObjectOfType<Spawner>().spawnNext();
-					spawnedBall = true;
-				}
-			}
-			return true;
-		}
-
-		return false;
+		Group parentGroup = (Group)parent;
+		parentGroup.NeighborForces ();
 	}
 
 	// Update is called once per frame
-	void Update () {
+	/*void Update () {
 		/*if (fixated) {
 			if (Input.GetKeyDown (KeyCode.LeftArrow)) {
 				if (velocity[0] >= -2) {

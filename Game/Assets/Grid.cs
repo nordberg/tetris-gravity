@@ -81,6 +81,7 @@ public class Grid : MonoBehaviour {
 			c.ApplyGravity ();
 			c.ApplyGroundForce();
 			c.ResolveCollisions();
+			c.ApplyNeighborForce();
 		}
 	}
 

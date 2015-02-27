@@ -2,81 +2,94 @@
 using System.Collections;
 
 public class Group : MonoBehaviour {
+	Component[] children;
+	float[,] distanceMatrix;
 
-	float gravity = 0.0001f * 9.82f;
-
-	bool isValidGridPos() {
-		foreach (Transform child in transform) {
-			Vector2 v = Grid.roundVec2(child.position);
-			
-			// Not inside Border?
-			if (!Grid.insideBorder(v))
-				return false;
-			
-			// Block in grid cell (and not part of same group)?
-			if (Grid.grid[(int)v.x, (int)v.y] != null &&
-			    Grid.grid[(int)v.x, (int)v.y].parent != transform)
-				return false;
-		}
-		return true;
-	}
+	public bool active = false;
+	public static Group activeGroup = null;
 
 	// Use this for initialization
 	void Start () {
-	
+		children = GetComponentsInChildren<Circle> ();
+		distanceMatrix = new float[children.Length, children.Length];
+
+		for (int i = 0; i < children.Length; i++) {
+			for (int j = 0; j < children.Length; j++) {
+				if (i == j) {
+					continue;
+				}
+				Circle c1 = (Circle) children[i];
+				Circle c2 = (Circle) children[j];
+				Vector3 r_vec = c1.transform.position - c2.transform.position;
+				
+				float dist = r_vec.magnitude;
+				distanceMatrix[i,j] = dist;
+				distanceMatrix[j,i] = dist;
+			}
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.UpArrow)) {
-			transform.Rotate (0, 0, -90);
-
-			if (isValidGridPos()) {
-				updateGrid();
-			} else {
-				transform.Rotate (0, 0, 90);
-			}
-		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-			transform.position += new Vector3(-1, 0, 0);
-			if (isValidGridPos()) {
-				updateGrid();
-			} else {
-				transform.position += new Vector3(1, 0, 0);
-			}
-		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
-			transform.position += new Vector3(1, 0, 0);
-			if (isValidGridPos()) {
-				updateGrid();
-			} else {
-				transform.position += new Vector3(-1, 0, 0);
-			}
-		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
-			transform.position += new Vector3(0, -1, 0);
-
-			if (isValidGridPos()) {
-				updateGrid();
-			} else {
-				transform.position += new Vector3(0, 1, 0);
-
-				FindObjectOfType<Spawner>().spawnNext();
-
-				enabled = false;
+		if (activeGroup != this) {
+			if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+				activeGroup.transform.position += new Vector3 (-1.0f, 0, 0);
 			}
 		}
 	}
+
+	public void NeighborForces() {
+		for (int i = 0; i < children.Length; i++) {
+			Circle c1 = (Circle) children[i];
+			for (int j = 0; j < children.Length; j++) {
+				if (i == j) {
+					continue;
+				}
+
+				if (distanceMatrix[i,j] == -1) {
+					continue;
+				}
+
+				Circle c2 = (Circle) children[j];
+
+				Vector3 r_vec = c1.transform.position - c2.transform.position;
+				
+				float dist = r_vec.magnitude;
+				
+				float diff_dist = dist - distanceMatrix[i,j];
+
+				/*if (diff_dist > 0.5f) {
+					c1.connected = false;
+					c2.connected = false;
+					continue;
+				}*/
+
+				float m_attraction = 250f;
+
+				//Vector3 diff_vel = c1.State.Velocity - c2.State.Velocity;
+
+				float m_dampning = 5f;
+
+				//Vector3 force_dampning = m_dampning * diff_vel;
+				//Vector3 force_attraction = m_attraction * diff_dist * r_vec.normalized;
+
+				Vector3 force = m_dampning * 
+					c1.State.Velocity - c2.State.Velocity + 
+					m_attraction * diff_dist * r_vec.normalized;
+
+				float max_force = 100f;
+
+				if (force.magnitude > max_force) {
+					for (int k = 0; k < children.Length; k++) {
+						distanceMatrix[i, k] = -1;
+						distanceMatrix[k, i] = -1;
+					}
+					force = force.normalized * max_force;
+				}
 			
-	void updateGrid() {
-		// Remove old children from grid
-		for (int y = 0; y < Grid.h; ++y)
-			for (int x = 0; x < Grid.w; ++x)
-				if (Grid.grid[x, y] != null)
-					if (Grid.grid[x, y].parent == transform)
-						Grid.grid[x, y] = null;
-		
-		// Add new children to grid
-		foreach (Transform child in transform) {
-			Vector2 v = Grid.roundVec2(child.position);
-			Grid.grid[(int)v.x, (int)v.y] = child;
-		}        
+				c1.ApplyForce (-force);
+				c2.ApplyForce (force);
+			}
+		}
 	}
 }
