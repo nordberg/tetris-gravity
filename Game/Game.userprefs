@@ -1,13 +1,13 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Spawner.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Group.cs">
     <Files>
-      <File FileName="Assets\Spawner.cs" Line="22" Column="6" />
-      <File FileName="Assets\Circle.cs" Line="156" Column="4" />
+      <File FileName="Assets\Circle.cs" Line="1" Column="1" />
+      <File FileName="Assets\Spawner.cs" Line="1" Column="1" />
       <File FileName="Assets\Grid.cs" Line="84" Column="27" />
       <File FileName="Assets\RK4Integrator.cs" Line="1" Column="1" />
       <File FileName="Assets\Integrator.cs" Line="1" Column="1" />
-      <File FileName="Assets\Group.cs" Line="38" Column="4" />
+      <File FileName="Assets\Group.cs" Line="67" Column="25" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

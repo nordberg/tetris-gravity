@@ -64,19 +64,18 @@ public class Group : MonoBehaviour {
 				}
 
 				float m_attraction = 250f;
-
+				float m_dampning = 4f;
+				float max_force = 100f;
 				//Vector3 diff_vel = c1.State.Velocity - c2.State.Velocity;
 
-				float m_dampning = 5f;
+
 
 				//Vector3 force_dampning = m_dampning * diff_vel;
 				//Vector3 force_attraction = m_attraction * diff_dist * r_vec.normalized;
 
 				Vector3 force = m_dampning * 
-					c1.State.Velocity - c2.State.Velocity + 
+					(c1.State.Velocity - c2.State.Velocity) + 
 					m_attraction * diff_dist * r_vec.normalized;
-
-				float max_force = 100f;
 
 				if (force.magnitude > max_force) {
 					for (int k = 0; k < children.Length; k++) {
