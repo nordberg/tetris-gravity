@@ -15,7 +15,7 @@ public class Grid : MonoBehaviour {
 	private IntegratorType m_integratorType = IntegratorType.RK4;
 	private static Integrator rk4 = new RK4Integrator ();
 
-	public static Vector2 roundVec2(Vector2 v) {
+	public static Vector2 roundVec3(Vector3 v) {
 		return new Vector2(Mathf.Round (v.x),
 		                   Mathf.Round (v.y));
 	}
@@ -28,29 +28,11 @@ public class Grid : MonoBehaviour {
 
 	public static void deleteRow(int y) {
 		for (int x = 0; x < w; ++x) {
-			Destroy(grid[x, y].gameObject);
+			grid[x, y].gameObject.GetComponentInChildren<Circle>().removeThis();
 			grid[x, y] = null;
 		}
 	}
 
-	public static void decreaseRow(int y) {
-		for (int x = 0; x < w; ++x) {
-			if (grid[x, y] != null) {
-				// Move one towards bottom
-				grid[x, y-1] = grid[x, y];
-				grid[x, y] = null;
-				
-				// Update Block position
-				grid[x, y-1].position += new Vector3(0, -1, 0);
-			}
-		}
-	}
-
-	public static void decreaseRowsAbove(int y) {
-		for (int i = y; i < h; ++i)
-			decreaseRow(i);
-	}
-	
 	public static bool isRowFull(int y) {
 		for (int x = 0; x < w; ++x) {
 			if (grid[x, y] == null) {
@@ -59,16 +41,6 @@ public class Grid : MonoBehaviour {
 		}
 
 		return true;
-	}
-
-	public static void deleteFullRows() {
-		for (int y = 0; y < h; ++y) {
-			if (isRowFull(y)) {
-				deleteRow(y);
-				decreaseRowsAbove(y+1);
-				--y;
-			}
-		}
 	}
 
 	void ApplyForces(float timeStep) {

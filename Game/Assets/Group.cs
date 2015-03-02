@@ -90,7 +90,6 @@ public class Group : MonoBehaviour {
 
 				if (diff_dist > 0.1f) {
 					distanceMatrix[i, j] = -1;
-					c1.removeThis();
 					continue;
 				}
 

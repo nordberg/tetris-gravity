@@ -6,6 +6,9 @@ public class Circle : MonoBehaviour {
 
 	public class PointState
 	{
+
+		public int row = 0;
+
 		public PointState()
 		{
 			Position = Vector3.zero;
@@ -64,6 +67,17 @@ public class Circle : MonoBehaviour {
 			if ((State.Position - transform.position).magnitude > 0.01f) {
 				transform.position = State.Position;
 			}
+			Vector2 rounded = Grid.roundVec3(transform.position);
+			int row = (int) rounded.x;
+			int col = (int) rounded.y;
+			Grid.grid[prev_row, prev_col] = null;
+			Grid.grid[row, col] = transform;
+			if (Grid.isRowFull (col)) {
+				Grid.deleteRow(col);
+			}
+			prev_row = row;
+			prev_col = col;
+
 		} else {
 			State.Position = transform.position;
 			State.Velocity = Vector3.zero;
@@ -77,6 +91,8 @@ public class Circle : MonoBehaviour {
 	}
 
 	public float gravity = 0.01f * 9.82f;
+	private int prev_row = 0;
+	private int prev_col = 0;
 
 	private Vector3 velocity;
 
