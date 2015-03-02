@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class Group : MonoBehaviour {
-	Component[] children;
+	public Component[] children;
 	float[,] distanceMatrix;
 
-	public bool active = false;
+	private bool fixated = false;
 	public static Group activeGroup = null;
 
 	// Use this for initialization
@@ -28,12 +28,33 @@ public class Group : MonoBehaviour {
 			}
 		}
 	}
+
+	public void StartMoving() {
+		fixated = false;
+		children = GetComponentsInChildren<Circle> ();
+		for (int j = 0; j < children.Length; j++) {
+			Circle c1 = (Circle) children[j];
+			c1.fixated = false;
+		}
+	}
+
+	public void dontMove() {
+		fixated = true;
+		children = GetComponentsInChildren<Circle> ();
+		for (int j = 0; j < children.Length; j++) {
+			Circle c1 = (Circle) children[j];
+			c1.fixated = true;
+		}
+	}
+
 	
 	// Update is called once per frame
 	void Update () {
-		if (activeGroup != this) {
+		if (fixated) {
 			if (Input.GetKeyDown (KeyCode.LeftArrow)) {
-				activeGroup.transform.position += new Vector3 (-1.0f, 0, 0);
+				transform.position +=  new Vector3(-1.0f,0f,0f);
+			} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
+				transform.position +=  new Vector3(1.0f,0f,0f);
 			}
 		}
 	}

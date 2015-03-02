@@ -59,9 +59,14 @@ public class Circle : MonoBehaviour {
 	
 	void Update()
 	{ 
-		//Update graphical representation
-		if ((State.Position - transform.position).magnitude > 0.01f) {
-			transform.position = State.Position;
+		if (!fixated) {
+			//Update graphical representation
+			if ((State.Position - transform.position).magnitude > 0.01f) {
+				transform.position = State.Position;
+			}
+		} else {
+			State.Position = transform.position;
+			State.Velocity = Vector3.zero;
 		}
 	}
 
@@ -78,7 +83,7 @@ public class Circle : MonoBehaviour {
 	private float radius = 0.5f;
 
 	private bool spawnedBall = false;
-	//public bool fixated = true;
+	public bool fixated = true;
 	public bool connected = true;
 
 	// Use this for initialization

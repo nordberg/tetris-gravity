@@ -6,7 +6,7 @@ public class Spawner : MonoBehaviour {
 	public GameObject[] groups;
 	public Circle m_ballPrefab = null;
 
-	public GameObject activeGroup = null;
+	public Group activeGroup = null;
 
 	private int ballsSpawned = 0;
 
@@ -19,15 +19,18 @@ public class Spawner : MonoBehaviour {
 				             transform.position,
 				             Quaternion.identity);
 
-			//Group.activeGroup = = go;
+			Group g = (Group) go.GetComponent<Group>();
+			g.dontMove();
 
+			activeGroup = g;
+
+			/*
 			Component[] children = go.GetComponentsInChildren<Circle>();
 			foreach (Circle c in children) {
 				c.ClearForce();
 				c.ApplyGravity();
 				c.ApplyGroundForce();
-				Grid.m_circles.Add(c);
-			}
+			}*/
 
 
 			//Debug.Log ("New ball");
@@ -47,6 +50,16 @@ public class Spawner : MonoBehaviour {
 	void Update () {
 		//spawnNext ();
 		if (Input.GetKeyDown (KeyCode.Space)) {
+			if (activeGroup != null) {
+				activeGroup.StartMoving();
+
+				foreach (Circle c in activeGroup.children) {
+					c.ClearForce();
+					c.ApplyGravity();
+					c.ApplyGroundForce();
+					Grid.m_circles.Add(c);
+				}
+			}
 			spawnNext ();
 		}
 	}
