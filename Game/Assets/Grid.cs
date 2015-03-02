@@ -22,7 +22,7 @@ public class Grid : MonoBehaviour {
 
 	public static bool insideBorder(Vector2 pos) {
 		return ((int)pos.x >= 0 &&
-		        (int)pos.x < w &&
+		        (int)pos.x + 1 < w &&
 		        (int)pos.y >= 0);
 	}
 
@@ -66,25 +66,16 @@ public class Grid : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//m_circles = new List<Circle> ();
 		Debug.Log ("Grid start");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-		//Debug.Log ("Grid update");
-
-		/*foreach (Circle c in FindObjectsOfType<Circle>()) {
-			m_circles.Add (c);
-		}*/
 		m_accumulator += Mathf.Min(Time.deltaTime / m_integratorTimeStep, 3.0f);
 
 		while (m_accumulator > 1.0f)
 		{
 			m_accumulator -= 1.0f;
-			
-			//	AdvanceEuler(m_circles, ApplyForces, m_integratorTimeStep);
 			AdvanceSimulation();
 		}
 	}
@@ -92,17 +83,5 @@ public class Grid : MonoBehaviour {
 	void AdvanceSimulation()
 	{
 		rk4.Advance(m_circles, ApplyForces, m_integratorTimeStep);
-	}
-
-	public void AdvanceEuler(List<Circle> points, Action<float> updateForcesFunc, float timeStep)
-	{
-		updateForcesFunc(timeStep);
-		
-		foreach (var point in points.ToList())
-		{
-			point.State.Velocity += (timeStep / point.Mass) * point.Force;
-			point.State.Position += timeStep * point.State.Velocity;
-			//point.State.Position += new Vector3(0f,-1f,0f);
-		}
 	}
 }

@@ -96,12 +96,6 @@ public class Group : MonoBehaviour {
 				float m_attraction = 250f;
 				float m_dampning = 4f;
 				float max_force = 100f;
-				//Vector3 diff_vel = c1.State.Velocity - c2.State.Velocity;
-
-
-
-				//Vector3 force_dampning = m_dampning * diff_vel;
-				//Vector3 force_attraction = m_attraction * diff_dist * r_vec.normalized;
 
 				Vector3 force = m_dampning * 
 					(c1.State.Velocity - c2.State.Velocity) + 
