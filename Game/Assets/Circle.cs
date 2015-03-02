@@ -122,7 +122,7 @@ public class Circle : MonoBehaviour {
 	}
 
 	public void ResolveCollisions() {
-		foreach (Circle c in Grid.m_circles) {
+		foreach (Circle c in Grid.m_circles.ToArray()) {
 			if (this != c) {
 				Vector3 distVec = c.State.Position - State.Position;
 				float dist = distVec.magnitude;

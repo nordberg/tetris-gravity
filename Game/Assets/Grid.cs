@@ -91,7 +91,7 @@ public class Grid : MonoBehaviour {
 	{
 		updateForcesFunc(timeStep);
 		
-		foreach (var point in points)
+		foreach (var point in points.ToList())
 		{
 			point.State.Velocity += (timeStep / point.Mass) * point.Force;
 			point.State.Position += timeStep * point.State.Velocity;

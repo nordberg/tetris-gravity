@@ -45,10 +45,12 @@ public class Spawner : MonoBehaviour {
 	void Start () {
 		spawnNext();
 	}
+
+	float timeSince = 0f;
+	float timeSpawn = 0f;
 	
 	// Update is called once per frame
 	void Update () {
-		//spawnNext ();
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			if (activeGroup != null) {
 				activeGroup.StartMoving();
@@ -59,8 +61,16 @@ public class Spawner : MonoBehaviour {
 					c.ApplyGroundForce();
 					Grid.m_circles.Add(c);
 				}
+				activeGroup = null;
+				timeSpawn =	Time.time;
 			}
-			spawnNext ();
+		}
+
+		timeSince = Time.time - timeSpawn;
+		if (activeGroup == null) {
+			if (timeSince >= 2) {
+				spawnNext();
+			}
 		}
 	}
 }
