@@ -71,7 +71,7 @@ public class Circle : MonoBehaviour {
 			int row = (int) rounded.x;
 			int col = (int) rounded.y;
 			Grid.grid[prev_row, prev_col] = null;
-			Grid.grid[row, col] = transform;
+			Grid.grid[row, col] = transform.gameObject;
 			if (Grid.isRowFull (col)) {
 				Grid.deleteRow(col);
 			}
@@ -126,7 +126,7 @@ public class Circle : MonoBehaviour {
 			if (this != c) {
 				Vector3 distVec = c.State.Position - State.Position;
 				float dist = distVec.magnitude;
-				float mCircleStiffness = 400f;
+				float mCircleStiffness = 800f;
 				float mCircleDampning = 10f;
 
 				if(distVec.magnitude <= 0) 
