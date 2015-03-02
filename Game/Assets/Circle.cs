@@ -56,7 +56,6 @@ public class Circle : MonoBehaviour {
 
 	public Vector3 Force{ get; private set; }
 	public float Mass = 1.0f;
-	public float gravity = 0.01f * 9.82f;
 	private int prev_row = 0;
 	private int prev_col = 0;
 	
@@ -66,7 +65,10 @@ public class Circle : MonoBehaviour {
 	
 	void Update()
 	{ 
-		if (!fixated) {
+		if (fixated) {
+			State.Position = transform.position;
+			State.Velocity = Vector3.zero;
+		} else {
 			//Update graphical representation
 			if ((State.Position - transform.position).magnitude > 0.01f) {
 				transform.position = State.Position;
@@ -74,19 +76,16 @@ public class Circle : MonoBehaviour {
 			Vector2 rounded = Grid.roundVec3(transform.position);
 			int row = (int) rounded.x;
 			int col = (int) rounded.y;
-			if (row < Grid.grid.Length & col < Grid.grid.GetLength (0)) {
+			if (row < Grid.grid.Length && col < Grid.grid.GetLength(0)
+			    && row >= 0 && col >= 0) {
 				Grid.grid[prev_row, prev_col] = null;
-				Grid.grid[row, col] = transform.gameObject;
+				Grid.grid[row, col] = transform;
 				if (Grid.isRowFull (col)) {
 					Grid.deleteRow(col);
 				}
 				prev_row = row;
 				prev_col = col;
 			}
-
-		} else {
-			State.Position = transform.position;
-			State.Velocity = Vector3.zero;
 		}
 	}
 
@@ -151,17 +150,13 @@ public class Circle : MonoBehaviour {
 		if (distToGround < 0) {
 			float depth = 0 - distToGround;
 			groundForce += new Vector3(0, groundStiffness * depth, 0);
-			ApplyForce (-m_groundDamping * State.Velocity);
+			ApplyForce(-m_groundDamping * State.Velocity); // Varför kan inte den här adderas till groundForce?
 		}
 
-		// LEFT WALL
 		if (transform.position [0] <= 0) {
 			float depth = Mathf.Abs(0 - transform.position[0]);
 			groundForce += new Vector3(groundStiffness * depth, 0, 0);
-		}
-
-		// RIGHT WALL
-		if (transform.position [0] >= Grid.w - 2 * radius) {
+		} else if (transform.position [0] >= Grid.w - 2 * radius) {
 			float depth = transform.position[0] - (Grid.w - 2 * radius);
 			groundForce += new Vector3(-groundStiffness * depth, 0, 0);
 		}

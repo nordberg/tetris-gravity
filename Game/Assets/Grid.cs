@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,13 @@ public class Grid : MonoBehaviour {
 
 	public static int w = 10;
 	public static int h = 20;
-	public static GameObject[,] grid = new GameObject[w,h];
+	public static Transform[,] grid = new Transform[w,h];
 	public static List<Circle> m_circles = new List<Circle> ();
 	private float m_integratorTimeStep = 1.0f / 60.0f;
 	private float m_accumulator = 0.0f;
-	private IntegratorType m_integratorType = IntegratorType.RK4;
 	private static Integrator rk4 = new RK4Integrator ();
+	private static int score = 0;
+	static Text scoreText = null;
 	
 	public static Vector2 roundVec3(Vector3 v) {
 		return new Vector2(Mathf.Round (v.x),
@@ -21,9 +23,17 @@ public class Grid : MonoBehaviour {
 	}
 
 	public static bool insideBorder(Vector2 pos) {
-		return ((int)pos.x >= 0 &&
-		        (int)pos.x + 1 < w &&
-		        (int)pos.y >= 0);
+		return (pos.x >= 0 &&
+		        pos.x + 0.5 <= w);
+	}
+
+	private static void addScore(int pscore) {
+		score += pscore;
+		updateScore();
+	}
+
+	private static void updateScore() {
+		//scoreText.text = "Score: " + score;
 	}
 
 	public static void deleteRow(int y) {
@@ -44,9 +54,12 @@ public class Grid : MonoBehaviour {
 			}
 		}
 
-		if (dupl.Count < 5) {
+		if (dupl.Count < 2) {
 			return false;
 		}
+
+		addScore(dupl.Count * 100);
+
 		return true;
 	}
 
@@ -56,22 +69,25 @@ public class Grid : MonoBehaviour {
 
 	void ClearAndApplyGravity() {
 		foreach (Circle c in m_circles.ToList()) {
-			c.ClearForce ();
-			c.ApplyGravity ();
-			c.ApplyGroundForce();
-			c.ResolveCollisions();
-			c.ApplyNeighborForce();
+			if (c.Force.magnitude > 1f) {
+				c.ClearForce ();
+				c.ApplyGravity ();
+				c.ApplyGroundForce();
+				c.ResolveCollisions();
+				c.ApplyNeighborForce();
+			}
 		}
 	}
 
 	// Use this for initialization
 	void Start () {
+		//scoreText = GetComponent<Text>();
 		Debug.Log ("Grid start");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		m_accumulator += Mathf.Min(Time.deltaTime / m_integratorTimeStep, 3.0f);
+		m_accumulator += Mathf.Min(Time.deltaTime / m_integratorTimeStep, 5.0f);
 
 		while (m_accumulator > 1.0f)
 		{

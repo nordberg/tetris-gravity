@@ -31,7 +31,6 @@ public class Group : MonoBehaviour {
 
 	public void StartMoving() {
 		fixated = false;
-		children = GetComponentsInChildren<Circle> ();
 		for (int j = 0; j < children.Length; j++) {
 			Circle c1 = (Circle) children[j];
 			c1.fixated = false;
@@ -40,7 +39,6 @@ public class Group : MonoBehaviour {
 
 	public void dontMove() {
 		fixated = true;
-		children = GetComponentsInChildren<Circle> ();
 		for (int j = 0; j < children.Length; j++) {
 			Circle c1 = (Circle) children[j];
 			c1.fixated = true;
@@ -53,14 +51,30 @@ public class Group : MonoBehaviour {
 		if (fixated) {
 			if (Input.GetKeyDown (KeyCode.LeftArrow)) {
 				transform.position +=  new Vector3(-1.0f,0f,0f);
+				if (!isValidPos()) {
+					transform.position +=  new Vector3(1.0f,0f,0f);
+				}
 			} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 				transform.position +=  new Vector3(1.0f,0f,0f);
+				if (!isValidPos()) {
+					transform.position +=  new Vector3(-1.0f,0f,0f);
+				}
 			} else if (Input.GetKey (KeyCode.UpArrow)) {
-				transform.Rotate(0,0,-9f);
+				transform.Rotate(0,0,-7f);
 			} else if (Input.GetKey (KeyCode.DownArrow)) {
-				transform.Rotate(0,0,9f);
+				transform.Rotate(0,0,7f);
 			} 
 		}
+	}
+
+	bool isValidPos() {
+		foreach (Circle child in children) {
+			Vector2 pos = new Vector2(child.transform.position.x, child.transform.position.y);
+			if (!Grid.insideBorder(pos)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void NeighborForces() {
