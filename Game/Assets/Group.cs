@@ -77,14 +77,25 @@ public class Group : MonoBehaviour {
 					(c1.State.Velocity - c2.State.Velocity) + 
 					m_attraction * diff_dist * r_vec.normalized;
 
-				if (force.magnitude > max_force) {
+				float magnitude = force.magnitude;
+
+				if (magnitude > max_force) {
 					for (int k = 0; k < children.Length; k++) {
 						distanceMatrix[i, k] = -1;
 						distanceMatrix[k, i] = -1;
 					}
 					force = force.normalized * max_force;
 				}
-			
+
+				Color c = Color.green;
+				if(magnitude > max_force/4f) {
+					c = Color.blue;
+					if (magnitude > max_force /2f ) {
+						c = Color.red;
+					}
+				}
+
+				Debug.DrawLine (c1.State.Position, c2.State.Position,c);
 				c1.ApplyForce (-force);
 				c2.ApplyForce (force);
 			}
