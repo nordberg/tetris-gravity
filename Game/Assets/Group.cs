@@ -55,7 +55,11 @@ public class Group : MonoBehaviour {
 				transform.position +=  new Vector3(-1.0f,0f,0f);
 			} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
 				transform.position +=  new Vector3(1.0f,0f,0f);
-			}
+			} else if (Input.GetKey (KeyCode.UpArrow)) {
+				transform.Rotate(0,0,-9f);
+			} else if (Input.GetKey (KeyCode.DownArrow)) {
+				transform.Rotate(0,0,9f);
+			} 
 		}
 	}
 

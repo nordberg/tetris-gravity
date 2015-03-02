@@ -76,7 +76,7 @@ public class Grid : MonoBehaviour {
 	}
 
 	void ClearAndApplyGravity() {
-		foreach (Circle c in m_circles) {
+		foreach (Circle c in m_circles.ToList()) {
 			c.ClearForce ();
 			c.ApplyGravity ();
 			c.ApplyGroundForce();
