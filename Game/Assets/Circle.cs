@@ -70,13 +70,15 @@ public class Circle : MonoBehaviour {
 			Vector2 rounded = Grid.roundVec3(transform.position);
 			int row = (int) rounded.x;
 			int col = (int) rounded.y;
-			Grid.grid[prev_row, prev_col] = null;
-			Grid.grid[row, col] = transform.gameObject;
-			if (Grid.isRowFull (col)) {
-				Grid.deleteRow(col);
+			if (row < Grid.grid.Length & col < Grid.grid.GetLength (0)) {
+				Grid.grid[prev_row, prev_col] = null;
+				Grid.grid[row, col] = transform.gameObject;
+				if (Grid.isRowFull (col)) {
+					Grid.deleteRow(col);
+				}
+				prev_row = row;
+				prev_col = col;
 			}
-			prev_row = row;
-			prev_col = col;
 
 		} else {
 			State.Position = transform.position;

@@ -2,7 +2,8 @@ fileFormatVersion: 2
 guid: 55f5f58384587384b9dbc01f6a26ca62
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - particleSys: {fileID: 163598, guid: b9ba9414f8421f645a6450d453626f6a, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
