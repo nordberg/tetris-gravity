@@ -41,6 +41,9 @@ public class Group : MonoBehaviour {
 	public void NeighborForces() {
 		for (int i = 0; i < children.Length; i++) {
 			Circle c1 = (Circle) children[i];
+			if (c1 == null) 
+				continue;
+
 			for (int j = 0; j < children.Length; j++) {
 				if (i == j) {
 					continue;
@@ -51,6 +54,8 @@ public class Group : MonoBehaviour {
 				}
 
 				Circle c2 = (Circle) children[j];
+				if (c2 == null) 
+					continue;
 
 				Vector3 r_vec = c1.transform.position - c2.transform.position;
 				
@@ -60,6 +65,7 @@ public class Group : MonoBehaviour {
 
 				if (diff_dist > 0.1f) {
 					distanceMatrix[i, j] = -1;
+					c1.removeThis();
 					continue;
 				}
 

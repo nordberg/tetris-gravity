@@ -65,6 +65,12 @@ public class Circle : MonoBehaviour {
 		}
 	}
 
+	public void removeThis() {
+		Grid.m_circles.Remove (this);
+		Destroy (this.transform.gameObject);
+		enabled = false;
+	}
+
 	public float gravity = 0.01f * 9.82f;
 
 	private Vector3 velocity;
@@ -72,7 +78,7 @@ public class Circle : MonoBehaviour {
 	private float radius = 0.5f;
 
 	private bool spawnedBall = false;
-	private bool fixated = true;
+	//public bool fixated = true;
 	public bool connected = true;
 
 	// Use this for initialization
