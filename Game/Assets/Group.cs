@@ -61,8 +61,14 @@ public class Group : MonoBehaviour {
 				}
 			} else if (Input.GetKey (KeyCode.UpArrow)) {
 				transform.Rotate(0,0,-7f);
+				if (!isValidPos()) {
+					transform.Rotate (0,0,7);
+				}
 			} else if (Input.GetKey (KeyCode.DownArrow)) {
 				transform.Rotate(0,0,7f);
+				if (!isValidPos()) {
+					transform.Rotate(0,0,-7f);
+				}
 			} 
 		}
 	}

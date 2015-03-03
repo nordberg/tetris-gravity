@@ -74,9 +74,23 @@ public class Circle : MonoBehaviour {
 				transform.position = State.Position;
 			}
 			Vector2 rounded = Grid.roundVec3(transform.position);
-			int row = (int) rounded.x;
-			int col = (int) rounded.y;
-			if (row < Grid.grid.Length && col < Grid.grid.GetLength(0)
+			int row = (int) rounded.y;
+			int col = (int) rounded.x;
+			for (int i = 0; i < Grid.h; i++) {
+				if (Grid.rows[i].Contains(transform)) {
+					Grid.rows[i].Remove (transform);
+					break;
+				}
+			}
+
+			Grid.rows[row].Add(transform);
+
+			for (int i = 0; i < Grid.h; i++) {
+				if (Grid.isRowFull(i)) {
+					Grid.deleteRow(i);
+				}
+			}
+			/*if (col < Grid.h && row < Grid.w
 			    && row >= 0 && col >= 0) {
 				Grid.grid[prev_row, prev_col] = null;
 				Grid.grid[row, col] = transform;
@@ -85,7 +99,7 @@ public class Circle : MonoBehaviour {
 				}
 				prev_row = row;
 				prev_col = col;
-			}
+			}*/
 		}
 	}
 
