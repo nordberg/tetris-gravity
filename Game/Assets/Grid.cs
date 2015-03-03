@@ -72,7 +72,7 @@ public class Grid : MonoBehaviour {
 			}
 		}*/
 
-		if (dupl.Count < 4) {
+		if (dupl.Count < 6) {
 			return false;
 		}
 

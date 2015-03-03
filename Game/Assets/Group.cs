@@ -23,8 +23,13 @@ public class Group : MonoBehaviour {
 				Vector3 r_vec = c1.transform.position - c2.transform.position;
 				
 				float dist = r_vec.magnitude;
-				distanceMatrix[i,j] = dist;
-				distanceMatrix[j,i] = dist;
+				if(dist < 2) {
+					distanceMatrix[i,j] = dist;
+					distanceMatrix[j,i] = dist;
+				} else {
+					distanceMatrix[i,j] = -1;
+					distanceMatrix[j,i] = -1;
+				}
 			}
 		}
 	}

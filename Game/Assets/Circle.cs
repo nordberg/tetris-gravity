@@ -159,7 +159,7 @@ public class Circle : MonoBehaviour {
 		float distToGround = transform.position [1] - 2 * radius;
 		Vector3 groundForce = new Vector3 (0, 0, 0);
 		float groundStiffness = 800f;
-		float m_groundDamping = 10f;
+		float m_groundDamping = 20f;
 
 		if (distToGround < 0) {
 			float depth = 0 - distToGround;
