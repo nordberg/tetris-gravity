@@ -66,41 +66,49 @@
 \maketitle
 
 \section{Project idea}
-Our idea for a project was to make a version of tetris with real forces and behaviour of the tetris blocks. The goal of the project was to make tetris look more realistic. 
+Our idea for a project was to make a version of Tetris with physical forces and behaviour of the Tetris blocks. The goal of the project was to make Tetris look more realistic. 
 
 \section{Restrictions}
-Due to the short timespan we had to make some restrictions to the game. We decided to use balls instead of squared so collision detections would be simpler, and we wouldn't have to consider rotations from collisions.
+Due to the short timespan we had to make some restrictions to the game. We decided to use spheres instead of squares, so that collision detections would be easier, and we would not have to consider rotations from collisions.
 
 \section{Technical aspects}
-The forces we had to implement was gravity, and some kind of force that could handle collisions between game objects and walls. First we tried to make the balls bounce on the walls and each other by just handling these collisions as fully elastic collisions. This did however not look very realistic, so we decided to give up the collision-approach and go for mass-spring system instead. In order for this to work we had to implement Hooke's law (1) and a damper to prevent oscillations (2).
+Forces needed for this project is a gravitational force, a force keeping the Tetris blocks together and some sort of wall collision force.
+
+The forces implemented in this project are all spring-based, except for the gravity. First we tried to make the spheres bounce on the walls and eachother just by handling these collisions as fully elastic collisions. This, however, did not look very realistic. Instead we decided to give up the collision-approach and go for a mass-spring system instead. In order for this to work we had to implement Hooke's law \eqref{eq:hookeslaw} and a damper to prevent oscillations \eqref{eq:damping}.
 %Hooke's law
 \begin{equation}
-       F = -k*x
+	\label{eq:hookeslaw}
+       F = -k*X
 \end{equation}
 
 \begin{equation}
+	\label{eq:damping}
        F = -d*v
 \end{equation}
 
-We introduced springs for keeping the balls inside the container, and between the balls to handle collisions. These spring forces was just added when a ball was colliding with something. Later we added springs between the balls in order to keep them together as a tetris block. These springs could break if they ware pulled to far, this made the blocks break apart when they ware hit by other objects.   
+Whenever a sphere would collide with the wall or ground, a spring is introduced. This spring will have the ``relaxed length'' of $1 * r$ where $r$ is the radius of the sphere. The result of this is a force directed from the wall.
 
- 
+The same logic applies whenever two spheres collides. Detecting collision between two spheres is simple ($if~d < 2 * r$) and resolving the collision comes down to introducing a spring between the two center-points. This spring has a ``relaxed length'' of $2 * r$ and thus, will force the spheres to disperse.
+
+In both of these cases, we had to tweak the numbers (spring constant and damping) quite a lot to get realistic results.
 
 \section{Game aspects}
-teris är kul
+Implementing physics and getting the model to work was the priority of this project. Adding game mechanics and making it enjoyable to play was a stretch goal. We found that it is quite hard to build upon a physics simulation and try to build the game mechanics around that.
 
-\section{Problems}
+What makes Tetris hard is that you are often getting into situation where your new Tetris blocks does not really fit anywhere. This is not the case in our rendition of Tetris as physics makes the block kind of fall into places.
+
+\section{Implementation}
 In our first attempt where we tried using fully elastic collisions we succeeded to get fairly realistic interaction between the ground and a bouncing ball, but the interaction between balls was realistic at all, mostly because we has to cancel out chain reactions between the balls with a high dampening. This made the balls move slowly colliding, which didn't look realistic at all.
 \\  \\
 Our implementation of the mass spring system is based on lab 3. We started out by using the euler method for calculating the movement of the balls, this turned out to be a problem because of the low accuracy and small stability region of the method. When the balls was supposed to be stationary they ware bouncing up and down slightly instead. We tried to counteract this by increasing the spring coefficient but this made the system unstable, and the balls started flying in all directions. To solve this we changed numerical integrator to RK4 which is a method with a fourth order accuracy compared to to forward euler which is just first order. RK4:s stability region is also bigger than forward euler which allowed us to have larger forces while maintaining the same time step.
 
 \section{Ideas for further work}
 \begin{itemize}
-\item{Add friction so the balls behave less like a liquid}
-\item{Add balls with different attributed, like mass, other forces}
-\item{Change the balls to squares, and consider rotation}
-\item{extend to 3D}
-\item{Add more interesting game mechanics }
+\item{Add friction so the balls behave less like a liquid -- This is important for the walls as all the spring forces makes the spheres closest to the walls slowly climb them.}
+\item{Change the balls to squares, and consider rotation -- A huge amount of our code is based around spheres so changing to cubes would mean a lot of work but the result could be really good. It would be easier to identify it as Tetris.}
+\item{Add balls with different attributes, like mass, other forces, etc. -- This would add to the game mechanics and enjoyability}
+\item{Extend to 3D -- While easy to do it would add extra challenges on the game mechanics. How would a 3D version of Tetris work?}
+\item{Add more interesting game mechanics}
 \end{itemize}
 
 
