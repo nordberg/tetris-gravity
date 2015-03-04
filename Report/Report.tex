@@ -81,36 +81,47 @@ The forces implemented in this project are all spring-based, except for the grav
        F = -k*X
 \end{equation}
 
+where $k$ is the spring constant and $X$ is the difference in length compared to the relaxed length of the spring.
+
 \begin{equation}
 	\label{eq:damping}
-       F = -d*v
+       F = -d*V
 \end{equation}
+
+where $d$ is the damping factor and $V$ is the velocity of the sphere.
 
 Whenever a sphere would collide with the wall or ground, a spring is introduced. This spring will have the ``relaxed length'' of $1 * r$ where $r$ is the radius of the sphere. The result of this is a force directed from the wall.
 
 The same logic applies whenever two spheres collides. Detecting collision between two spheres is simple ($if~d < 2 * r$) and resolving the collision comes down to introducing a spring between the two center-points. This spring has a ``relaxed length'' of $2 * r$ and thus, will force the spheres to disperse.
 
 In both of these cases, we had to tweak the numbers (spring constant and damping) quite a lot to get realistic results.
-
 \section{Game aspects}
 Implementing physics and getting the model to work was the priority of this project. Adding game mechanics and making it enjoyable to play was a stretch goal. We found that it is quite hard to build upon a physics simulation and try to build the game mechanics around that.
 
 What makes Tetris hard is that you are often getting into situation where your new Tetris blocks does not really fit anywhere. This is not the case in our rendition of Tetris as physics makes the block kind of fall into places.
 
 \section{Implementation}
-In our first attempt where we tried using fully elastic collisions we succeeded to get fairly realistic interaction between the ground and a bouncing ball, but the interaction between balls was realistic at all, mostly because we has to cancel out chain reactions between the balls with a high dampening. This made the balls move slowly colliding, which didn't look realistic at all.
+In our first attempt, we tried to use fully elastic collisions. We succeeded with getting fairly realistic interaction between the ground and a bouncing ball, but as we added more spheres, things started to go south. The interaction between spheres was not realistic at all, mostly because we had to cancel out chain reactions between the spheres with a high dampening. This made the spheres move slowly colliding, which didn't look realistic at all.
 \\  \\
-Our implementation of the mass spring system is based on lab 3. We started out by using the euler method for calculating the movement of the balls, this turned out to be a problem because of the low accuracy and small stability region of the method. When the balls was supposed to be stationary they ware bouncing up and down slightly instead. We tried to counteract this by increasing the spring coefficient but this made the system unstable, and the balls started flying in all directions. To solve this we changed numerical integrator to RK4 which is a method with a fourth order accuracy compared to to forward euler which is just first order. RK4:s stability region is also bigger than forward euler which allowed us to have larger forces while maintaining the same time step.
+Our implementation of the mass spring system is based on lab 3. We started out by using the euler method for calculating the movement of the spheres, this turned out to be a problem because of the low accuracy and small stability region of the method. When the spheres were supposed to be stationary they ware bouncing up and down slightly instead. We tried to counteract this by increasing the spring coefficient but this made the system unstable, and the spheres started flying in all directions. To solve this we changed numerical integrator to RK4 which is a method with a fourth order accuracy compared to to forward euler which is just first order. RK4:s stability region is also bigger than forward euler which allowed us to have larger forces while maintaining the same time step.
+
+While there is a larger risk of performance issues when using RK4, Tetris is very limited in terms of amount of processing. We know the possible maximum of objects on the screen during a game so as long as we can handle that scenario, performance will not be an issue.
+
+\subsection{Our Work Flow}
+We think that our work flow was really good for this project. The milestones we set up were realistic and we managed to held all our internal deadlines. Our first milestone was to get a single sphere to bounce. This meant that we had to solve collision between borders and the spheres. Extending from this, the next milestone was to add additional spheres for sphere-to-sphere collision. The last milestone was to build a Tetris block consisting of small spheres and make it work. We feel like this was a good way of conducting this project. When we found time before the deadline, we focused on game mechanics and enjoyability.
+
+\section{Conclusion}
+Simulations are all about selling something fake to an audience. In the end, a simulation's purpose is to trick someone into believing something. During the work in progress seminar, one of the TA's said that they actually liked one of the first versions of Jonathan's bowling ball\footnote{http://jonathangolan.se/Blog/blog.html}. The TA had a different opinion (or idea) of what a bowling ball hitting a brick wall would look like. Sadly, we never hit this road block which, according to us, is one of the most interesting parts about models and simulation. When you have to take a step back and think for a second -- what is really the most realistic simulation of this problem? According to whom?
+
+There are still things in our project that we would not be able to sell to an audience. The way spheres slowly drifts outside the borders and the way they might intersect is simply not realistic. 
 
 \section{Ideas for further work}
 \begin{itemize}
-\item{Add friction so the balls behave less like a liquid -- This is important for the walls as all the spring forces makes the spheres closest to the walls slowly climb them.}
-\item{Change the balls to squares, and consider rotation -- A huge amount of our code is based around spheres so changing to cubes would mean a lot of work but the result could be really good. It would be easier to identify it as Tetris.}
-\item{Add balls with different attributes, like mass, other forces, etc. -- This would add to the game mechanics and enjoyability}
+\item{Add friction so the spheres behave less like a liquid -- This is important for the walls as all the spring forces makes the spheres closest to the walls slowly climb them.}
+\item{Change the spheres to squares, and consider rotation -- A huge amount of our code is based around spheres so changing to cubes would mean a lot of work but the result could be really good. It would be easier to identify it as Tetris.}
+\item{Add spheres with different attributes, like mass, other forces, etc. -- This would add to the game mechanics and enjoyability}
 \item{Extend to 3D -- While easy to do it would add extra challenges on the game mechanics. How would a 3D version of Tetris work?}
 \item{Add more interesting game mechanics}
 \end{itemize}
-
-
 
 \end{document}
