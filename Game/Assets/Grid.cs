@@ -7,14 +7,21 @@ using System;
 
 public class Grid : MonoBehaviour {
 
+	// The grid size
 	public static int w = 10;
 	public static int h = 20;
+
+	// The grid to keep track of spheres and if there's a full row
 	public static Transform[,] grid = new Transform[w,h];
+
 	public static List<List<Transform>> rows = new List<List<Transform>>(h);
 	public static List<Circle> m_circles = new List<Circle> ();
+
 	private float m_integratorTimeStep = 1.0f / 60.0f;
 	private float m_accumulator = 0.0f;
+
 	private static Integrator rk4 = new RK4Integrator ();
+
 	private static int score = 0;
 	public static Text scoreText = null;
 	
@@ -43,35 +50,27 @@ public class Grid : MonoBehaviour {
 
 		}
 		rows[y].Clear();
-		/*
-		for (int x = 0; x < w; ++x) {
-			grid[x, y].gameObject.GetComponentInChildren<Circle>().removeThis();
-			grid[x, y] = null;
-		}*/
 	}
 
+	// Just having a full row is too easy, you need a full row
+	// with a certain amount of colours aswell.
 	public static bool isRowFull(int y) {
+		
+		// Colours represented in the full row
 		List<string> dupl = new List<string> ();
+
 		if (rows [y].Count < 9) {
 			return false;
 		}
 
+		// Count the amount of colours represented
 		foreach (Transform child in rows[y]) {
 			if (!dupl.Contains(child.name)) {
 				dupl.Add (child.name);
 			}
 		}
 
-		/*
-		for (int x = 0; x < w; ++x) {
-			if (grid[x, y] == null) {
-				return false;
-			}
-			if (!dupl.Contains (grid[x,y].name)) {
-				dupl.Add(grid[x,y].name);
-			}
-		}*/
-
+		// 6 colours needed to get points
 		if (dupl.Count < 6) {
 			return false;
 		}
@@ -87,13 +86,11 @@ public class Grid : MonoBehaviour {
 
 	void ClearAndApplyGravity() {
 		foreach (Circle c in m_circles.ToList()) {
-			//if (c.Force.magnitude > 1f) {
-				c.ClearForce ();
-				c.ApplyGravity ();
-				c.ApplyGroundForce();
-				c.ResolveCollisions();
-				c.ApplyNeighborForce();
-			//}
+			c.ClearForce ();
+			c.ApplyGravity ();
+			c.ApplyGroundForce();
+			c.ResolveCollisions();
+			c.ApplyNeighborForce();
 		}
 	}
 
@@ -110,6 +107,7 @@ public class Grid : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 		m_accumulator += Mathf.Min(Time.deltaTime / m_integratorTimeStep, 5.0f);
 
 		while (m_accumulator > 1.0f)

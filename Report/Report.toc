@@ -4,7 +4,7 @@
 \contentsline {section}{\numberline {4}Game aspects}{2}
 \contentsline {section}{\numberline {5}Implementation}{3}
 \contentsline {subsection}{\numberline {5.1}Our Work Flow}{4}
-\contentsline {subsection}{\numberline {5.2}How we divided the work}{4}
+\contentsline {subsection}{\numberline {5.2}Working in a Group}{4}
 \contentsline {subsection}{\numberline {5.3}Final results}{4}
-\contentsline {section}{\numberline {6}Conclusion}{4}
+\contentsline {section}{\numberline {6}Conclusion}{5}
 \contentsline {section}{\numberline {7}Ideas for further work}{5}

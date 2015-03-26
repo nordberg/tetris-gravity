@@ -13,6 +13,10 @@ public class Group : MonoBehaviour {
 		children = GetComponentsInChildren<Circle> ();
 		distanceMatrix = new float[children.Length, children.Length];
 
+		// Determine how close spheres in a group are with a distance matrix
+		// distanceMatrix[i,j] is the distance between i and j
+		// If they're too far from eachother (<2), -1 is used and they'll
+		// no longer be attached to eachother
 		for (int i = 0; i < children.Length; i++) {
 			for (int j = 0; j < children.Length; j++) {
 				if (i == j) {
@@ -78,6 +82,7 @@ public class Group : MonoBehaviour {
 		}
 	}
 
+	// If the new position is valid
 	bool isValidPos() {
 		foreach (Circle child in children) {
 			Vector2 pos = new Vector2(child.transform.position.x, child.transform.position.y);
@@ -95,6 +100,8 @@ public class Group : MonoBehaviour {
 				continue;
 
 			for (int j = 0; j < children.Length; j++) {
+				
+				// Code to check if they are close enough to stick together
 				if (i == j) {
 					continue;
 				}
@@ -118,6 +125,8 @@ public class Group : MonoBehaviour {
 					continue;
 				}
 
+				// They are close enough to stick together. Calculate forces
+				// to keep them together. Introduce a tough spring between them.
 				float m_attraction = 250f;
 				float m_dampning = 4f;
 				float max_force = 100f;

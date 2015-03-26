@@ -40,13 +40,6 @@ public class Circle : MonoBehaviour {
 	
 	private CircleState m_savedState = new CircleState();
 	
-	//A note about this way of setting the position in Unity:
-	//  This in not how you really would use Unity in most
-	//  cases. Normally you use their physics engine, which 
-	//  would handle this in a better way with interpolation 
-	//  and other fancy features. This is only to get clean 
-	//  access to Pos/Vel/Force in a consistent way.
-	
 	void Awake()
 	{
 		State = new Circle.CircleState();
@@ -65,6 +58,7 @@ public class Circle : MonoBehaviour {
 	
 	void Update()
 	{ 
+		// Fixated when at the top of the screen
 		if (fixated) {
 			State.Position = transform.position;
 			State.Velocity = Vector3.zero;
@@ -74,6 +68,8 @@ public class Circle : MonoBehaviour {
 				transform.position = State.Position;
 			}
 			Vector2 rounded = Grid.roundVec3(transform.position);
+
+			// Place in the grid
 			int row = (int) rounded.y;
 			int col = (int) rounded.x;
 			for (int i = 0; i < Grid.h; i++) {
@@ -90,19 +86,10 @@ public class Circle : MonoBehaviour {
 					Grid.deleteRow(i);
 				}
 			}
-			/*if (col < Grid.h && row < Grid.w
-			    && row >= 0 && col >= 0) {
-				Grid.grid[prev_row, prev_col] = null;
-				Grid.grid[row, col] = transform;
-				if (Grid.isRowFull (col)) {
-					Grid.deleteRow(col);
-				}
-				prev_row = row;
-				prev_col = col;
-			}*/
 		}
 	}
 
+	// Remove this circle
 	public void removeThis() {
 		Grid.m_circles.Remove (this);
 		Destroy (this.transform.gameObject);
@@ -139,15 +126,16 @@ public class Circle : MonoBehaviour {
 				float mCircleStiffness = 800f;
 				float mCircleDampning = 10f;
 
-				if(dist <= 0) {
-					Debug.Log ("Inte bra");
-				}
-
 				float depth = dist - 2*radius;
+
+				// When two spheres are intersecting, apply a force that is directed 
+				// away from the other sphere. Dampning is a force loss.
 				Vector3 f1 = depth * mCircleStiffness * distVec.normalized;
 				Vector3 dampning = -mCircleDampning * State.Velocity;
+
 				ApplyForce (f1);
 				c.ApplyForce (-f1);
+
 				ApplyForce (dampning);
 				c.ApplyForce (-dampning);
 			}

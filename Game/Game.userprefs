@@ -1,12 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Group.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\..\simulation-lab3-part1\ocean_simulations_unity\OceanSurfaceEffects\Temp\Compiled-Normal-Glossy-.shader">
     <Files>
-      <File FileName="Assets\Grid.cs" Line="75" Column="21" />
-      <File FileName="Assets\Circle.cs" Line="188" Column="1" />
-      <File FileName="Assets\Group.cs" Line="27" Column="6" />
-      <File FileName="Assets\Spawner.cs" Line="55" Column="2" />
-      <File FileName="Assets\RK4Integrator.cs" Line="106" Column="2" />
+      <File FileName="..\..\simulation-lab3-part1\ocean_simulations_unity\OceanSurfaceEffects\Temp\Compiled-Normal-Glossy-.shader" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
